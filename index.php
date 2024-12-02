@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+include "bootstrap_connection.php";
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
