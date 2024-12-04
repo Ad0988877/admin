@@ -18,6 +18,18 @@ if (empty($contacts)) {
     echo "No employees found in the database.";
     exit;
 }
+
+
+$contact = null;
+$contact_id = null;
+
+if (isset($_GET['contact_id'])) {
+    $contact_id = $_GET['contact_id'];
+    $query = "SELECT * FROM contact WHERE contact_id = :contact_id";
+    $stmt = $db->prepare($query);
+    $stmt->execute([':contact_id' => $contact_id]);
+    $contact = $stmt->fetch(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +37,7 @@ if (empty($contacts)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact List</title>
+    <title>Contact Info</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
@@ -37,6 +49,7 @@ if (empty($contacts)) {
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($contact['contact_first_name'] . ' ' . $contact['contact_last_name']); ?></h5>
                         <p class="card-text">
+                            <strong>Id:</strong> <?= htmlspecialchars($contact['contact_id']); ?><br>
                             <strong>Phone:</strong> <?= htmlspecialchars($contact['contact_phone']); ?><br>
                             <strong>Address:</strong> <?= htmlspecialchars($contact['contact_address']); ?><br>
                             <strong>Street:</strong> <?= htmlspecialchars($contact['contact_street']); ?><br>
@@ -54,7 +67,7 @@ if (empty($contacts)) {
                             <strong>Brand ID:</strong> <?= htmlspecialchars($contact['brand_id']); ?><br>
                             <strong>Product ID:</strong> <?= htmlspecialchars($contact['product_id']); ?><br>
                         </p>
-                        <a href="#" class="btn btn-primary">View Details</a>
+                        <a href="dash.php" class="btn btn-primary">Return</a>
                     </div>
                 </div>
             <?php endforeach; ?>
