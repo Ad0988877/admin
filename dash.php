@@ -12,6 +12,9 @@ try {
 
 $query = "SELECT * FROM contact";
 $contacts =$db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+$services = $db->query("SELECT service_id, service_type FROM service")->fetchAll(PDO::FETCH_ASSOC);
+$brands = $db->query("SELECT brand_id, brand_name FROM brand")->fetchAll(PDO::FETCH_ASSOC);
+$products = $db->query("SELECT product_id, product_name FROM product")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -38,11 +41,12 @@ $contacts =$db->query($query)->fetchAll(PDO::FETCH_ASSOC);
                             <strong>City:</strong> <?= htmlspecialchars($contact['contact_city']); ?><br>
                             <strong>State:</strong> <?= htmlspecialchars($contact['contact_state']); ?><br>
                             <strong>Site ZIP:</strong> <?= htmlspecialchars($contact['contact_site_zip']); ?><br>
-                            <strong>Service ID:</strong> <?= htmlspecialchars($contact['service_id']); ?><br>
+                            <strong>Contacted Date(yyyy-mm-dd):</strong> <?= htmlspecialchars($contact['contact_contacted_date'] ?? 'Not yet contacted'); ?><br>
+                            <strong>Service type:</strong> <?= htmlspecialchars($contact['service_id'])?><br>
+                            
                         </p>
                         <a href="full_contact.php?contact_id=<?= urlencode($contact['contact_id']); ?>" class="btn btn-primary">View Details</a>
                     </div>
-                    
                 </div>
             <?php endforeach; ?>
         </ul>

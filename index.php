@@ -1,64 +1,15 @@
-<?php
-session_start();
-
-$dsn = "mysql:host=localhost;dbname=contact_electric";
-$dbUsername = "root";
-$dbPassword = "";
-
-$error = '';
-
-try {
-    $db = new PDO($dsn, $dbUsername, $dbPassword);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    $error = "Error connecting to the database: " . $e->getMessage();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-
-    if (empty($username) || empty($password)) {
-        $error = 'Username and password are required.';
-    } else {
-        $query = "SELECT * FROM employee WHERE employee_username = :username";
-        $stmt = $db->prepare($query);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['employee_password'])) {
-            $_SESSION['username'] = $username; 
-            header('Location: dash.php');
-            exit();
-        } else {
-            $error = 'Invalid username or password.';
-        }
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <meta name="viewport" content="width=`device-width`, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <title>All Electric</title>
 </head>
 <body>
-    <div class="login-form">
-        <h2>Login</h2>
-        <?php if ($error): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
-        <form method="post" action="">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Login</button>
-        </form>
-    </div>
+    <?php include "includes/contact-form.php" ?>
+    <h1>The thing</h1>
 </body>
 </html>
