@@ -1,7 +1,18 @@
 <?php
 session_start();
-include "bootstrap_connection.php";
+
+$dsn = "mysql:host=localhost;dbname=contact_electric";
+$dbUsername = "root";
+$dbPassword = "";
+
 $error = '';
+
+try {
+    $db = new PDO($dsn, $dbUsername, $dbPassword);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    $error = "Error connecting to the database: " . $e->getMessage();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
@@ -10,21 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error = 'Username and password are required.';
     } else {
-        if (file_exists('user.csv')) {
-            $users = array_map('str_getcsv', file('user.csv'));
-        } else {
-            die("Error: user.csv file not found.");
-        }
+        $query = "SELECT * FROM employee WHERE employee_username = :username";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
 
-        $valid = false;
-        foreach ($users as $user) {
-            if ($user[0] === $username && $user[1] === $password) {
-                $valid = true;
-                break;
-            }
-        }
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($valid) {
+        if ($user && password_verify($password, $user['employee_password'])) {
+            $_SESSION['username'] = $username; 
             header('Location: dash.php');
             exit();
         } else {

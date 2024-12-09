@@ -1,12 +1,11 @@
 <?php
-$dsn = "mysql:host=localhost;dbname=contacts";
+$dsn = "mysql:host=localhost;dbname=contact_electric";
 $username = "root";
 $password = "";
 
 try {
     $db = new PDO($dsn, $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo("connected");
 } catch (PDOException $e) {
     echo "Error connecting to the database: " . $e->getMessage();
 }
@@ -33,17 +32,15 @@ $contacts =$db->query($query)->fetchAll(PDO::FETCH_ASSOC);
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($contact['contact_first_name'] . ' ' . $contact['contact_last_name']); ?></h5>
                         <p class="card-text">
-                            <strong>Id:</strong> <?= htmlspecialchars($contact['contact_id']); ?><br>
                             <strong>Phone:</strong> <?= htmlspecialchars($contact['contact_phone']); ?><br>
-                            <strong>Address:</strong> <?= htmlspecialchars($contact['contact_address']); ?><br>
-                            <strong>Street:</strong> <?= htmlspecialchars($contact['contact_street']); ?><br>
+                            <strong>Addres:</strong> <?= htmlspecialchars($contact['contact_street']); ?><br>
                             <strong>ZIP:</strong> <?= htmlspecialchars($contact['contact_zip']); ?><br>
                             <strong>City:</strong> <?= htmlspecialchars($contact['contact_city']); ?><br>
                             <strong>State:</strong> <?= htmlspecialchars($contact['contact_state']); ?><br>
                             <strong>Site ZIP:</strong> <?= htmlspecialchars($contact['contact_site_zip']); ?><br>
                             <strong>Service ID:</strong> <?= htmlspecialchars($contact['service_id']); ?><br>
                         </p>
-                        <a href="full_contact.php?contact_id=<?php echo isset($contact['contact_id'[]]) ? : ''; ?>" class="btn btn-primary" >View Details</a>
+                        <a href="full_contact.php?contact_id=<?= urlencode($contact['contact_id']); ?>" class="btn btn-primary">View Details</a>
                     </div>
                     
                 </div>
