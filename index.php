@@ -9,7 +9,6 @@
     <title>All Electric</title>
 </head>
 <body>
-    <?php include "includes/contact-form.php" ?>
-    <h1>The thing</h1>
+    <?php header("Location: login.php"); ?>
 </body>
 </html>

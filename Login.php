@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user && password_verify($password, $user['employee_password'])) {
             $_SESSION['username'] = $username; 
+            $_SESSION['employee_id'] = $user['employee_id'];
             header('Location: dash.php');
             exit();
         } else {
@@ -47,36 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login</title>
 </head>
 <body>
-    <div class="login-form">
-        <h2>Login</h2>
-        <?php if ($error): ?>
-            <p class="error"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
-        <!-- <form method="post" action="">
+<div class="login-form">
+    <h2>Login</h2>
+    <?php if ($error): ?>
+        <p class="error"><?php echo htmlspecialchars($error); ?></p>
+    <?php endif; ?>
+    <form method="post" action="login.php">
+        <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
+            <input type="text" class="form-control" name="username" id="username" required>
+        </div>
+        <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Login</button>
-        </form> -->
-    </div>
-    <div class="card-body">
-        <h5 class="card-title"><?= htmlspecialchars($contact['contact_first_name'] . ' ' . $contact['contact_last_name']); ?></h5>
-        <p class="card-text">
-        <form>
-  <div class="form-group">
-  <label for="username">Username:</label>
-  <input type="text" class="form-control" name="username" id="username" required>
-  </div>
-  <div class="form-group">
-    <label for="password">Password:</label>
-    <input type="password" class="form-control" name="password" id="password" required>
-  </div>
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
-    </div>
+            <input type="password" class="form-control" name="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+</div>
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </html>

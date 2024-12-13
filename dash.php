@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $dsn = "mysql:host=localhost;dbname=contact_electric";
 $username = "root";
 $password = "";
@@ -11,22 +13,40 @@ try {
 }
 
 $query = "SELECT * FROM contact";
-$contacts =$db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-$services = $db->query("SELECT service_id, service_type FROM service")->fetchAll(PDO::FETCH_ASSOC);
-$brands = $db->query("SELECT brand_id, brand_name FROM brand")->fetchAll(PDO::FETCH_ASSOC);
-$products = $db->query("SELECT product_id, product_name FROM product")->fetchAll(PDO::FETCH_ASSOC);
+$contacts = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact List</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="dash.php">Home</a>
+                </li>
+                <?php if (isset($_SESSION['employee_id']) && $_SESSION['employee_id'] == 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_employee.php">Add Employee</a>
+                    </li>
+                <?php endif; ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1 class="mb-4">Contacts</h1>
         <ul class="list-unstyled">
@@ -36,14 +56,13 @@ $products = $db->query("SELECT product_id, product_name FROM product")->fetchAll
                         <h5 class="card-title"><?= htmlspecialchars($contact['contact_first_name'] . ' ' . $contact['contact_last_name']); ?></h5>
                         <p class="card-text">
                             <strong>Phone:</strong> <?= htmlspecialchars($contact['contact_phone']); ?><br>
-                            <strong>Addres:</strong> <?= htmlspecialchars($contact['contact_street']); ?><br>
+                            <strong>Address:</strong> <?= htmlspecialchars($contact['contact_street']); ?><br>
                             <strong>ZIP:</strong> <?= htmlspecialchars($contact['contact_zip']); ?><br>
                             <strong>City:</strong> <?= htmlspecialchars($contact['contact_city']); ?><br>
                             <strong>State:</strong> <?= htmlspecialchars($contact['contact_state']); ?><br>
                             <strong>Site ZIP:</strong> <?= htmlspecialchars($contact['contact_site_zip']); ?><br>
-                            <strong>Contacted Date(yyyy-mm-dd):</strong> <?= htmlspecialchars($contact['contact_contacted_date'] ?? 'Not yet contacted'); ?><br>
-                            <strong>Service type:</strong> <?= htmlspecialchars($contact['service_id'])?><br>
-                            
+                            <strong>Contacted Date (yyyy-mm-dd):</strong> <?= htmlspecialchars($contact['contact_contacted_date'] ?? 'Not yet contacted'); ?><br>
+                            <strong>Service type:</strong> <?= htmlspecialchars($contact['service_id']); ?><br>
                         </p>
                         <a href="full_contact.php?contact_id=<?= urlencode($contact['contact_id']); ?>" class="btn btn-primary">View Details</a>
                     </div>
@@ -56,3 +75,4 @@ $products = $db->query("SELECT product_id, product_name FROM product")->fetchAll
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+</html>
